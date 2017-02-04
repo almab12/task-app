@@ -9,18 +9,50 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var task_service_1 = require("../../services/task.service");
 var TasksComponent = (function () {
-    function TasksComponent() {
+    function TasksComponent(TaskService) {
+        var _this = this;
+        this.TaskService = TaskService;
+        this.TaskService.getTasks()
+            .subscribe(function (tasks) {
+            _this.tasks = tasks;
+        });
     }
+    TasksComponent.prototype.addTask = function (event) {
+        var _this = this;
+        event.preventDefault();
+        var newTask = {
+            title: this.title,
+            isDone: false
+        };
+        this.TaskService.addTask(newTask)
+            .subscribe(function (task) {
+            _this.tasks.push(task);
+            _this.title = '';
+        });
+    };
+    TasksComponent.prototype.deleteTask = function (id) {
+        var tasks = this.tasks;
+        this.TaskService.deleteTask(id).subscribe(function (data) {
+            if (data.n == 1) {
+                for (var i = 0; i < tasks.length; i++) {
+                    if (tasks[i]._id == id) {
+                        tasks.splice(i, 1);
+                    }
+                }
+            }
+        });
+    };
     return TasksComponent;
 }());
 TasksComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
         selector: 'tasks',
-        template: 'tasks.component.html'
+        templateUrl: 'tasks.component.html'
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [task_service_1.TaskService])
 ], TasksComponent);
 exports.TasksComponent = TasksComponent;
 //# sourceMappingURL=tasks.component.js.map

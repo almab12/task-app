@@ -23,8 +23,8 @@ router.get('/task/:id', function(req, res, next){
 });
 
 router.post('/task', function(req, res, next){
-    var tasks = req.body;
-    if(!task.title || (task.isDone + '')){
+    var task = req.body;
+    if(!task.title || !(task.isDone + '')){
         res.status(400);
         res.json({"error":"Bad data"});
     }else{
@@ -32,7 +32,7 @@ router.post('/task', function(req, res, next){
             if(err){
                 res.send(err);
             }
-            res.json(tasks); 
+            res.json(task); 
         });
     }
 
